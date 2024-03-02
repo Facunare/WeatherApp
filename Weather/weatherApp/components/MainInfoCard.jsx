@@ -12,7 +12,7 @@ const MainInfoCard = ({data}) => {
                 <p>Min: {data && data.main && data.main.temp_min ? Math.round(data.main.temp_min)+ '°C' : '---'}</p>
                 <p>Max: {data && data.main && data.main.temp_max ? Math.round(data.main.temp_max)+ '°C' : '---'}</p>
             </div>
-            <img src="/House 4 3.svg" alt=""  />
+            <img src="/House 4 3.svg" alt=""  id="house"/>
         </div>
     );
 };

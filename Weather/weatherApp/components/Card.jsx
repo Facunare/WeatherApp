@@ -114,7 +114,7 @@ const Card = () => {
 
 
     return (
-        <div className="overflow-hidden bg-white/[.1] backdrop-blur-md w-[390px] h-[744px] rounded-[35px] flex-col flex justify-center bg-[url('/Image.svg')] shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+        <div id="card" className="overflow-hidden bg-white/[.1] backdrop-blur-md w-[390px] h-[744px] rounded-[35px] flex-col flex justify-center bg-[url('/Image.svg')] shadow-[0_3px_10px_rgb(0,0,0,0.2)]" >
             <div className="flex items-center justify-center">
                 <SearchBar setData={setData} setSearchVisible={setSearchVisible} searchVisible={searchVisible} setFetchType={setFetchType}/>
                 <button className="top-0 right-0 absolute mt-[2px] p-5 group" onClick={returnGeolocation}><i class='bx bx-map-pin text-white group-hover:text-blue-300 text-xl'></i></button>

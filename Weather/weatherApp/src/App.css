@@ -8,6 +8,23 @@
     background-color: rgb(89, 59, 157);;
 }
 
+@media screen and (max-width: 430px){
+    #card{
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        object-fit: cover;
+        background-repeat: no-repeat;
+        border-radius: 0px;
+    }
+
+    #house{
+        width: 100%;
+        margin-top: 75px
+    }
+
+    
+}
 
 
 @tailwind base;
