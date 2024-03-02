@@ -15,17 +15,21 @@ const Card = () => {
     const [fetchType, setFetchType] = useState('');
 
     useEffect(() => {
-     
-        const storedData = localStorage.getItem("data");
-        if (storedData) {
-            try {
-                const parsedData = JSON.parse(storedData);
-                setData(parsedData);
-                setFetchType('local'); 
-            } catch (error) {
-                console.error("Error parsing JSON:", error);
+        async function fetchData() {
+            const storedData = localStorage.getItem("data");
+            if (storedData) {
+                try {
+                    const parsedData = JSON.parse(storedData);
+                    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${parsedData.name}&appid=8618719e0c739a0ddc42604f37fd6261&units=metric`);
+                    const dataJson = await res.json();
+                    setData(dataJson);
+                    setFetchType('local'); 
+                } catch (error) {
+                    console.error("Error parsing JSON:", error);
+                }
             }
         }
+        fetchData()
     }, [fetchType]);
 
     useEffect(() => {
@@ -66,40 +70,46 @@ const Card = () => {
 
   
     useEffect(() => {
-      const modalElement = modalRef.current;
-  
-      const handleMouseDown = (event) => {
-        event.preventDefault();
-  
-        const initialY = event.clientY;
-        const initialHeight = modalElement.offsetHeight;
-  
-        const onMouseMove = (moveEvent) => {
-          const deltaY = moveEvent.clientY - initialY;
-          const newHeight = initialHeight - deltaY;
-  
-          if (newHeight >= 300 && newHeight <= 740) {
-            setModalHeight(newHeight);
-            modalElement.style.height = `${newHeight}px`;
-          }
+        const modalElement = modalRef.current;
+      
+        const handleStart = (event) => {
+          event.preventDefault();
+      
+          const initialY = event.clientY || event.touches[0].clientY;
+          const initialHeight = modalElement.offsetHeight;
+      
+          const onMove = (moveEvent) => {
+            const deltaY = (moveEvent.clientY || moveEvent.touches[0].clientY) - initialY;
+            const newHeight = initialHeight - deltaY;
+      
+            if (newHeight >= 300 && newHeight <= 740) {
+              setModalHeight(newHeight);
+              modalElement.style.height = `${newHeight}px`;
+            }
+          };
+      
+          const onEnd = () => {
+            document.removeEventListener("mousemove", onMove);
+            document.removeEventListener("mouseup", onEnd);
+            document.removeEventListener("touchmove", onMove);
+            document.removeEventListener("touchend", onEnd);
+          };
+      
+          document.addEventListener("mousemove", onMove);
+          document.addEventListener("mouseup", onEnd);
+          document.addEventListener("touchmove", onMove);
+          document.addEventListener("touchend", onEnd);
         };
-  
-        const onMouseUp = () => {
-          document.removeEventListener("mousemove", onMouseMove);
-          document.removeEventListener("mouseup", onMouseUp);
+      
+        modalElement.addEventListener("mousedown", handleStart);
+        modalElement.addEventListener("touchstart", handleStart);
+      
+        return () => {
+          modalElement.removeEventListener("mousedown", handleStart);
+          modalElement.removeEventListener("touchstart", handleStart);
         };
-  
-        document.addEventListener("mousemove", onMouseMove);
-        document.addEventListener("mouseup", onMouseUp);
-      };
-  
-      modalElement.addEventListener("mousedown", handleMouseDown);
-  
-      return () => {
-        modalElement.removeEventListener("mousedown", handleMouseDown);
-      };
-    }, [modalRef]);
-
+      }, [modalRef]);
+      
 
 
 
@@ -107,7 +117,7 @@ const Card = () => {
         <div className="overflow-hidden bg-white/[.1] backdrop-blur-md w-[390px] h-[744px] rounded-[35px] flex-col flex justify-center bg-[url('/Image.svg')] shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
             <div className="flex items-center justify-center">
                 <SearchBar setData={setData} setSearchVisible={setSearchVisible} searchVisible={searchVisible} setFetchType={setFetchType}/>
-                <button className="top-0 right-0 absolute mt-1 p-5 group" onClick={returnGeolocation}><i class='bx bx-map-pin text-white group-hover:text-blue-300'></i></button>
+                <button className="top-0 right-0 absolute mt-[2px] p-5 group" onClick={returnGeolocation}><i class='bx bx-map-pin text-white group-hover:text-blue-300 text-xl'></i></button>
             </div>
             <MainInfoCard data={data} card={"card1"}/>
             <Footer handleClickPlus={handleClickPlus} handleSearchView={handleSearchView}/>

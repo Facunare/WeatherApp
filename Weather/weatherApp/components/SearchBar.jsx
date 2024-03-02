@@ -24,7 +24,6 @@ const SearchBar = ({setData, setSearchVisible, searchVisible=true, card, setFetc
         const dataJson = await res.json();
         const currentPlaces = JSON.parse(localStorage.getItem("places")) || [];
         if(currentPlaces.some(place => place.id === dataJson.id)) return;
-        
         if(dataJson.cod == "404") return
         const updatedPlaces = [...currentPlaces, dataJson];
         localStorage.setItem("places", JSON.stringify(updatedPlaces));
