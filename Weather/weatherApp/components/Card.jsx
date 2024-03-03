@@ -3,7 +3,7 @@ import SearchBar from "./SearchBar";
 import MainInfoCard from "./MainInfoCard";
 import Footer from "./Footer";
 import DataBox from "./DataBox";
-
+import Loading from "./Loading";
 const Card = () => {
     
     const modalRef = useRef(null);
@@ -13,6 +13,7 @@ const Card = () => {
     const [searchVisible, setSearchVisible] = useState(false);
     const [geoLocationFetched, setGeoLocationFetched] = useState(false);
     const [fetchType, setFetchType] = useState('');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function fetchData() {
@@ -26,6 +27,8 @@ const Card = () => {
                     setFetchType('local'); 
                 } catch (error) {
                     console.error("Error parsing JSON:", error);
+                }finally {
+                    setLoading(false);
                 }
             }
         }
@@ -118,6 +121,7 @@ const Card = () => {
             <div className="flex items-center justify-center">
                 <SearchBar setData={setData} setSearchVisible={setSearchVisible} searchVisible={searchVisible} setFetchType={setFetchType}/>
                 <button className="top-0 right-0 absolute mt-[2px] p-5 group" onClick={returnGeolocation}><i class='bx bx-map-pin text-white group-hover:text-blue-300 text-xl'></i></button>
+                <Loading loading={loading}/>
             </div>
             <MainInfoCard data={data} card={"card1"}/>
             <Footer handleClickPlus={handleClickPlus} handleSearchView={handleSearchView}/>
@@ -126,7 +130,7 @@ const Card = () => {
                     <button id="dradToTop" className="mt-3 p-[4px] bg-[#41215C] w-1/6 h-2 rounded-full"></button>
                     <div className="flex flex-col text-center m-7">
                         <h1 className="text-white text-3xl">{data?.name}</h1>
-                        <p className="text-[#85809A] text-2xl">{data && data.main && data.main.temp ? Math.round(data?.main?.temp) + "°C" : "---"} | {data && data.weather ? data?.weather[0]?.main : "" }</p>
+                        <p className="text-[#85809A] text-2xl">{data && data.main && data.main.temp && Math.round(data?.main?.temp) + "°C"} | {data && data.weather && data?.weather[0]?.main}</p>
                     </div>
                     <div className="grid grid-cols-2 grid-flow-row grid-flow-dense gap-3 w-full px-5">
                         <DataBox title="Humidity" data={data?.main?.humidity} icon="bx bxs-droplet-half"/>
@@ -145,3 +149,5 @@ const Card = () => {
 }
 
 export default Card
+
+//autocomplete
