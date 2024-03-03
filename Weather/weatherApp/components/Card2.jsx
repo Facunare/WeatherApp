@@ -5,20 +5,28 @@ import Widget from "./Widget";
 const Card2 = () => {
     let navigate = useNavigate();
     const [data, setData] = useState({})
-
-    useEffect(()=>{
-        const storedData = localStorage.getItem("places");
-        if (storedData) {
-            try {
-                const parsedData = JSON.parse(storedData);
-                console.log(parsedData);
-                setData(parsedData);
-                
-            } catch (error) {
-                console.error("Error parsing JSON:", error);
+    let res;
+    let dataJson;
+    useEffect(() => {
+        const putPlaces = async () => {
+            const storedData = localStorage.getItem("places");
+            if (storedData) {
+                try {
+                    const parsedData = JSON.parse(storedData);
+                    const newData = [];
+                    for (let i of parsedData) {
+                        res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${i.name}&appid=8618719e0c739a0ddc42604f37fd6261&units=metric`);
+                        dataJson = await res.json();
+                        newData.push(dataJson)
+                    }
+                    setData(newData);
+                } catch (error) {
+                    console.error("Error fetching weather data:", error);
+                }
             }
         }
-    }, [])
+        putPlaces();
+    }, []);
     
     const handleDelete = (id) => {
         const storedData = localStorage.getItem("places");
