@@ -1,7 +1,9 @@
 import React, {useState} from "react";
 
 const MainInfoCard = ({data}) => {
-
+    const estilo = {
+        maskImage: 'linear-gradient(black 45%, transparent)'
+      };
     return (
         <div className="text-white text-center">
             <h1 className="text-3xl">{data?.name}</h1>
@@ -12,7 +14,7 @@ const MainInfoCard = ({data}) => {
                 <p>{data && data.main && data.main.temp_min && "Min: " + Math.round(data.main.temp_min)+ '°C'}</p>
                 <p>{data && data.main && data.main.temp_max && "Max: " + Math.round(data.main.temp_max)+ '°C'}</p>
             </div>
-            <img src="/House 4 3.svg" alt=""  id="house"/>
+            <img src="/House 4 3.svg" alt=""  id="house" className="gradient-mask-t-0" style={estilo}/>
         </div>
     );
 };
